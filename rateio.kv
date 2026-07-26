@@ -1,0 +1,65 @@
+<RootLayout>:
+    orientation: 'vertical'
+    padding: 20
+    spacing: 15
+
+    # --- Cabeçalho ---
+    BoxLayout:
+        size_hint_y: None
+        height: '40dp'
+        Label:
+            text: 'Gestão de Água - Rateio'
+            font_size: '22sp'
+            bold: True
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+
+    # --- Formulário de Entradas ---
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: '40dp'
+        spacing: 10
+
+        TextInput:
+            id: txt_mes
+            hint_text: 'Mês/Ano (ex: 07/2026)'
+            multiline: False
+
+        TextInput:
+            id: txt_fixo
+            hint_text: 'Custo Fixo Total (R$)'
+            multiline: False
+            input_filter: 'float'
+
+        TextInput:
+            id: txt_var
+            hint_text: 'Custo Variável Total (R$)'
+            multiline: False
+            input_filter: 'float'
+
+    # --- Botões de Ação ---
+    BoxLayout:
+        size_hint_y: None
+        height: '45dp'
+        spacing: 10
+
+        Button:
+            text: 'Processar Rateio'
+            on_release: root.calcular_rateio()
+
+        Button:
+            id: btn_download
+            text: 'Baixar PDF'
+            disabled: True
+            on_release: root.baixar_pdf()
+
+    # --- Área de Resultados (Scrollable) ---
+    ScrollView:
+        BoxLayout:
+            id: container_resultados
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: 5

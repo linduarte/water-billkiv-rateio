@@ -1,0 +1,28 @@
+# --- Arquivos do Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+env/
+venv/
+ENV/
+
+# --- Arquivos do Kivy ---
+.kivy/
+
+# --- Arquivos Temporários e Relatórios do App ---
+# Descarta os PDFs gerados para não sujar o histórico do Git
+reports/*.pdf
+*.pdf
+
+# --- Configurações de IDEs e Editores ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Arquivos de Segurança / Variáveis de Ambiente ---
+# Evite subir chaves do Supabase ou senhas se estiver usando .env
+.env
+*.env
