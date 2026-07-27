@@ -1,0 +1,60 @@
+name: Keep Supabase Alive & Ping API
+
+on:
+  schedule:
+    # Executa a cada 4 dias às 00:00 UTC para evitar que o Supabase entre em pausa
+    - cron: '0 0 */4 * *'
+  workflow_dispatch: # Permite acionamento manual no GitHub Actions
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validar e Executar Ping no Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          set -e
+
+          # 1. Limpa espaços e quebras de linha acidentais
+          CLEAN_URL=$(echo "$SUPABASE_URL" | tr -d '[:space:]')
+
+          # 2. Verifica se a variável existe
+          if [ -z "$CLEAN_URL" ]; then
+            echo "::error::A variável SUPABASE_URL está vazia ou não foi configurada nos Secrets!"
+            exit 1
+          fi
+
+          # 3. Garante o protocolo https:// caso tenha sido omitido
+          if [[ ! "$CLEAN_URL" =~ ^https:// ]]; then
+            CLEAN_URL="https://$CLEAN_URL"
+          fi
+
+          # 4. Remove barra no final se existir
+          CLEAN_URL="${CLEAN_URL%/}"
+
+          # 5. Valida se a URL possui estrutura duplicada após o .co
+          if [[ "$CLEAN_URL" =~ \.co[a-z0-9]+ ]]; then
+            echo "::error::A URL parece estar malformada ou duplicada após o TLD (.co): $CLEAN_URL"
+            exit 1
+          fi
+
+          echo "URL configurada e validada: $CLEAN_URL"
+
+          # 6. Executa o Ping na API REST do Supabase
+          echo "Disparando requisição para a API REST..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X GET "$CLEAN_URL/rest/v1/" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY")
+
+          echo "Status HTTP retornado: $HTTP_STATUS"
+
+          # Aceita códigos 200 (OK) ou respostas de API ativas
+          if [[ "$HTTP_STATUS" -eq 200 || "$HTTP_STATUS" -eq 401 || "$HTTP_STATUS" -eq 403 ]]; then
+            echo "Ping realizado com sucesso! O banco Supabase está ativo."
+          else
+            echo "::error::Status inesperado retornado: $HTTP_STATUS. Verifique se o projeto foi restaurado no painel do Supabase."
+            exit 1
+          fi
