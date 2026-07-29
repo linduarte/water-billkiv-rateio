@@ -13,6 +13,10 @@ from kivy.uix.label import Label  # type: ignore
 from database import buscar_unidades
 from pdf_generator import gerar_relatorio_pdf
 
+# Descarrega o KV antigo e carrega a versão atualizada explicitamente
+Builder.unload_file("rateio.kv")  # type: ignore
+Builder.load_file("rateio.kv")  # type: ignore
+
 KV_DESIGN = """
 <RootLayout>:
     orientation: 'vertical'
