@@ -63,13 +63,13 @@ def gerar_relatorio_pdf(
     # --- Resumo Geral (Tabela de Custos) ---
     dados_resumo = [
         [
-            "Custo Fixo Total",
+            "Custo Fixo Total(esgoto)",
             f"R$ {val_fixo:.2f}",
             "Taxa Fixa por Unid.",
             f"R$ {t_fixa:.2f}",
         ],
         [
-            "Custo Variável Total",
+            "Custo Variável Total(água)",
             f"R$ {val_var:.2f}",
             "Taxa Var. por Morador",
             f"R$ {t_var:.2f}",
