@@ -55,7 +55,7 @@ def gerar_relatorio_pdf(
     )
 
     # --- Cabeçalho ---
-    story.append(Paragraph("RELATÓRIO DE RATEIO DE ÁGUA", title_style))
+    story.append(Paragraph("RELATÓRIO DE RATEIO DE ÁGUA & ESGOTO", title_style))
     story.append(Spacer(1, 6))
     story.append(Paragraph(f"Mês de Referência: <b>{mes_ref}</b>", subtitle_style))
     story.append(Spacer(1, 15))
