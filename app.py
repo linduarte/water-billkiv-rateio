@@ -28,7 +28,7 @@ KV_DESIGN = """
         size_hint_y: None
         height: '40dp'
         Label:
-            text: 'Gestão de Água - Rateio'
+            text: 'Gestão de Água & Esgoto - Rateio'
             font_size: '22sp'
             bold: True
             halign: 'left'
