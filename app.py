@@ -94,7 +94,7 @@ KV_DESIGN = """
             padding: [0, 10, 0, 10]
 """
 
-Builder.load_string(KV_DESIGN)
+Builder.load_file('layout_agua.kv')
 
 
 class RootLayout(BoxLayout):
