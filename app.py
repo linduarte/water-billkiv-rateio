@@ -232,15 +232,12 @@ class RootLayout(BoxLayout):
             webbrowser.open(os.path.abspath(self.pdf_path))
 
 
-class RateioKivApp(App):
-    """Kivy application for water bill distribution management."""
+class MeuApp(App):
+    """Main application class for water bill distribution."""
 
     def build(self):
-        self.title = "Gestão de Água & Esgoto - Rateio (Kivy)"
+        # ... retorno da sua tela principal
+        pass
 
-        # Força o descarregamento do cache antigo e carrega o arquivo correto
-        Builder.unload_file("layout_agua.kv")
-        return Builder.load_file("layout_agua.kv")
-    
-if __name__ == "__main__":
-    RateioKivApp().run()
+if __name__ == '__main__':
+    MeuApp().run()
