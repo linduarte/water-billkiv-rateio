@@ -233,12 +233,12 @@ class RootLayout(BoxLayout):
 
 
 class RateioKivApp(App):
-    """Main application for water bill distribution management."""
+    """Water bill distribution application using Kivy framework."""
 
-    def build(self) -> RootLayout:
-        self.title = "Gestão de Água - Rateio (Kivy)"
-        return RootLayout()
-
+    def build(self):
+        self.title = "Gestão de Água & Esgoto - Rateio (Kivy)"
+        # Não precisa chamar Builder.load_file
+        # O Kivy vai carregar o rateiokiv.kv automaticamente.
 
 if __name__ == "__main__":
     RateioKivApp().run()
