@@ -94,7 +94,8 @@ KV_DESIGN = """
             padding: [0, 10, 0, 10]
 """
 
-Builder.load_file('layout_agua.kv')
+# Substitua Builder.load_file('layout_agua.kv') por:
+Builder.load_string(KV_DESIGN)
 
 
 class RootLayout(BoxLayout):
@@ -236,8 +237,8 @@ class MeuApp(App):
     """Main application class for water bill distribution."""
 
     def build(self):
-        # ... retorno da sua tela principal
-        pass
+        return RootLayout()
+
 
 if __name__ == '__main__':
     MeuApp().run()
