@@ -237,6 +237,7 @@ class MeuApp(App):
     """Main application class for water bill distribution."""
 
     def build(self):
+        self.title = "Gestão de Água & Esgoto - Rateio (Kivy)"
         return RootLayout()
 
 
