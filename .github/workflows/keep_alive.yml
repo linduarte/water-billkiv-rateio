@@ -2,8 +2,8 @@ name: Keep Supabase Alive & Ping API
 
 on:
   schedule:
-    # Executa a cada 4 dias às 00:00 UTC para evitar que o Supabase entre em pausa
-    - cron: '0 0 */4 * *'
+    # Executa a cada 2 dias às 00:00 UTC para evitar que o Supabase entre em pausa
+    - cron: '0 0 */2 * *'
   workflow_dispatch: # Permite acionamento manual no GitHub Actions
 
 jobs:
