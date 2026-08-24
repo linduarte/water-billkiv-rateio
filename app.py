@@ -13,10 +13,6 @@ from kivy.uix.label import Label  # type: ignore
 from database import buscar_unidades
 from pdf_generator import gerar_relatorio_pdf
 
-# Descarrega o KV antigo e carrega a versão atualizada explicitamente
-# Builder.unload_file("rateio.kv")  # type: ignore
-# Builder.load_file("rateio.kv")  # type: ignore
-
 KV_DESIGN = """
 <RootLayout>:
     orientation: 'vertical'
@@ -94,7 +90,6 @@ KV_DESIGN = """
             padding: [0, 10, 0, 10]
 """
 
-# Substitua Builder.load_file('layout_agua.kv') por:
 Builder.load_string(KV_DESIGN)
 
 
@@ -112,7 +107,7 @@ class RootLayout(BoxLayout):
         container.clear_widgets()
         container.add_widget(
             Label(
-                text="Carregando dados do Supabase...",
+                text="Carregando dados do Neon...",
                 size_hint_y=None,
                 height=30,
                 color=(0.8, 0.8, 0.8, 1),
@@ -138,7 +133,7 @@ class RootLayout(BoxLayout):
                     unidades, val_fixo, val_var, mes_ref
                 )
             )
-        except (ValueError, ConnectionError, OSError, RuntimeError) as ex:
+        except (OSError, RuntimeError, ValueError) as ex:
             Clock.schedule_once(
                 lambda dt: self._mostrar_erro(f"Erro ao conectar/buscar dados: {ex}")
             )
@@ -154,7 +149,7 @@ class RootLayout(BoxLayout):
         if not unidades:
             container.add_widget(
                 Label(
-                    text="Nenhuma unidade encontrada no Supabase.",
+                    text="Nenhuma unidade encontrada no Neon.",
                     color=(1, 0, 0, 1),
                     size_hint_y=None,
                     height=30,
@@ -210,7 +205,7 @@ class RootLayout(BoxLayout):
 
             self.ids.btn_download.disabled = False
 
-        except (ValueError, OSError, RuntimeError) as ex:
+        except (OSError, RuntimeError, TypeError, ValueError) as ex:
             self._mostrar_erro(f"Erro ao processar cálculo/PDF: {ex}")
 
     def _mostrar_erro(self, mensagem: str) -> None:
