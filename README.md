@@ -1,17 +1,16 @@
 
 # 💧 Gestão de Água & Esgoto - Rateio (Kivy)
 
-Aplicação desktop em Python desenvolvida com **Kivy** para cálculo, gestão e rateio proporcional de contas de água e esgoto em condomínios/unidades, consumindo dados do **Supabase** e gerando relatórios detalhados em **PDF**.
+Aplicação desktop em Python desenvolvida com **Kivy** para cálculo, gestão e rateio proporcional de contas de água e esgoto em condomínios/unidades, consumindo dados do **Neon PostgreSQL** e gerando relatórios detalhados em **PDF**.
 
 ---
 
 ## 🚀 Funcionalidades
 
 - **Cálculo Proporcional Automático**: Rateio do custo fixo por unidade e do custo variável proporcionalmente ao número de moradores.
-- **Integração com Supabase**: Busca dinâmica e assíncrona da lista de unidades e moradores diretamente do banco de dados na nuvem.
+- **Integração com Neon PostgreSQL**: Busca dinâmica e assíncrona da lista de unidades e moradores diretamente do banco de dados na nuvem.
 - **Interface Responsiva (Kivy)**: Layout otimizado com navegação fluida via teclado (`Tab` / `Enter`) e lista de resultados rolável.
 - **Geração de Relatório PDF**: Criação automática de relatórios em formato PDF prontos para impressão ou envio.
-- **Manutenção de Banco (Keep Alive)**: Workflow automatizado via **GitHub Actions** para manter o projeto do Supabase ativo e evitar pausamento por inatividade.
 
 ---
 
@@ -20,7 +19,7 @@ Aplicação desktop em Python desenvolvida com **Kivy** para cálculo, gestão e
 - **Linguagem**: Python 3.12+
 - **Gerenciador de Pacotes**: `uv`
 - **Framework UI**: [Kivy](https://kivy.org/)
-- **Database / Backend**: [Supabase](https://supabase.com/)
+- **Database / Backend**: [Neon PostgreSQL](https://neon.com/)
 - **Geração de PDF**: ReportLab (ou módulo local `pdf_generator`)
 - **Automação CI/CD**: GitHub Actions (`keep_alive.yml`)
 
@@ -30,14 +29,10 @@ Aplicação desktop em Python desenvolvida com **Kivy** para cálculo, gestão e
 
 ```text
 water-billkiv-rateio/
-├── .github/
-│   └── workflows/
-│       └── keep_alive.yml     # Workflow para manter o Supabase ativo
 ├── reports/                   # Diretório de saída dos PDFs gerados (ignorado no Git)
 ├── app.py                     # Aplicação principal Kivy e regras de UI
-├── database.py                # Integração e consultas ao Supabase
+├── database.py                # Integração e consultas ao Neon PostgreSQL
 ├── pdf_generator.py           # Módulo de geração de relatórios PDF
-├── settings.py                # Configurações gerais e variáveis
 ├── pyproject.toml             # Dependências do projeto (uv)
 ├── uv.lock                    # Trava de versões de dependências
 └── README.md                  # Documentação do repositório
@@ -61,11 +56,10 @@ uv sync
 ```
 
 4. Variáveis de Ambiente
-Crie um arquivo .env na raiz do projeto (ou configure suas variáveis no settings.py) com as credenciais do seu projeto Supabase:
+Crie um arquivo `.env` na raiz do projeto com a URL de conexão do seu banco Neon:
 
 ```Plaintext
-SUPABASE_URL=[https://seu-projeto.supabase.co](https://seu-projeto.supabase.co)
-SUPABASE_KEY=sua-chave-anon-publica
+DATABASE_URL=postgresql://usuario:senha@ep-seu-projeto.us-east-2.aws.neon.tech/neondb?sslmode=require
 ```
 
 🖥️ Como Executar a Aplicação
@@ -85,19 +79,6 @@ Digite o Custo Variável Total (R$).
 Pressione Enter ou clique em Processar Rateio.
 
 Visualize o resultado na tela e clique em Baixar PDF para abrir o relatório gerado.
-
-🤖 Automação GitHub Actions (Keep Alive)
-Para evitar que a instância do Supabase entre em estado de pausa por inatividade (plano gratuito), o repositório conta com a rotina automática .github/workflows/keep_alive.yml.
-
-Para que a automação funcione no GitHub:
-
-Vá em Settings > Secrets and variables > Actions no repositório.
-
-Adicione as secrets:
-
-SUPABASE_URL
-
-SUPABASE_KEY
 
 ✒️ Licença e Autor
 Desenvolvido por Charles Duarte.
