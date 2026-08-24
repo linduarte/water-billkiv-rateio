@@ -1,25 +1,31 @@
-"""Supabase database access helpers for condominium unit data."""
+"""Neon PostgreSQL database access helpers for condominium unit data."""
 
-from typing import Any, cast
+import os
+from typing import Any, Dict, List
 
-from supabase import Client, create_client
+import psycopg2
+from dotenv import load_dotenv
+from psycopg2.extras import RealDictCursor
 
-from settings import settings
-
-
-def get_supabase_client() -> Client:
-    """Cria e retorna a instância do cliente Supabase."""
-    return create_client(settings.supabase_url, settings.supabase_key)
+load_dotenv()
 
 
-def buscar_unidades() -> list[dict[str, Any]]:
-    """Busca a lista de unidades do condomínio cadastradas no Supabase."""
-    supabase = get_supabase_client()
+def buscar_unidades() -> List[Dict[str, Any]]:
+    """Busca a lista de unidades do condomínio cadastradas no Neon (PostgreSQL)."""
+    db_url = os.getenv("DATABASE_URL")
+    if not db_url:
+        print("[ERRO] Variável DATABASE_URL não encontrada no arquivo .env")
+        return []
+
     try:
-        # Substitua 'unidades' pelo nome exato da sua tabela no Supabase
-        response = supabase.table("unidades").select("*").execute()
-        data = cast(list[dict[str, Any]] | None, response.data)
-        return data or []
-    except (ConnectionError, TimeoutError, ValueError) as err:
-        print(f"[ERRO] Falha ao buscar unidades no Supabase: {err}")
+        # RealDictCursor retorna os registros diretamente como dicionários Python
+        with psycopg2.connect(db_url) as conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+                cursor.execute(
+                    "SELECT id, moradores, nome_responsavel FROM unidades ORDER BY id;"
+                )
+                registros = cursor.fetchall()
+                return [dict(row) for row in registros]
+    except psycopg2.Error as err:
+        print(f"[ERRO] Falha ao buscar unidades no Neon: {err}")
         return []
