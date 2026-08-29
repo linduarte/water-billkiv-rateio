@@ -1,6 +1,7 @@
 """Water bill distribution application using Kivy."""
 
 import os
+import sqlite3
 import threading
 import webbrowser
 
@@ -133,9 +134,12 @@ class RootLayout(BoxLayout):
                     unidades, val_fixo, val_var, mes_ref
                 )
             )
-        except (OSError, RuntimeError, ValueError) as ex:
+        except (sqlite3.Error, OSError, RuntimeError, TypeError, ValueError) as ex:
+            err_msg = str(ex)
             Clock.schedule_once(
-                lambda dt: self._mostrar_erro(f"Erro ao conectar/buscar dados: {ex}")
+                lambda dt, msg=err_msg: self._mostrar_erro(
+                    f"Erro ao conectar/buscar dados: {msg}"
+                )
             )
 
     def _renderizar_resultados(
@@ -162,33 +166,39 @@ class RootLayout(BoxLayout):
             t_fixa = val_fixo / len(unidades) if unidades else 0.0
             t_var = val_var / total_moro if total_moro > 0 else 0.0
 
+            # Title label with left padding
             header_lbl = Label(
-                text=f"[b]RATEIO - {mes_ref}[/b]",
+                text=f"  [b]RATEIO - {mes_ref}[/b]",
                 markup=True,
                 size_hint_y=None,
-                height=30,
+                height=35,
                 halign="left",
                 valign="middle",
-                text_size=(self.width - 20, None),
+                text_size=(self.width - 40, None),
             )
             container.add_widget(header_lbl)
 
-            for u in sorted(unidades, key=lambda x: str(x.get("id", "0"))):
+            # Sort units numerically by ID integer value
+            unidades_ordenadas = sorted(
+                unidades, key=lambda x: int(x.get("id", 0))
+            )
+
+            for u in unidades_ordenadas:
                 moro = int(u.get("moradores", 0))
                 valor_total = t_fixa + (t_var * moro)
 
                 texto_item = (
-                    f"Unid {u.get('id')} - {u.get('nome_responsavel')} | "
+                    f"  Unid {u.get('id')} - {u.get('nome_responsavel')} | "
                     f"{moro} morador(es) | Total: R$ {valor_total:.2f}"
                 )
 
                 item_lbl = Label(
                     text=texto_item,
                     size_hint_y=None,
-                    height=25,
+                    height=28,
                     halign="left",
                     valign="middle",
-                    text_size=(self.width - 20, None),
+                    text_size=(self.width - 40, None),
                 )
                 container.add_widget(item_lbl)
 
@@ -205,8 +215,9 @@ class RootLayout(BoxLayout):
 
             self.ids.btn_download.disabled = False
 
-        except (OSError, RuntimeError, TypeError, ValueError) as ex:
-            self._mostrar_erro(f"Erro ao processar cálculo/PDF: {ex}")
+        except (AttributeError, OSError, RuntimeError, TypeError, ValueError) as ex:
+            err_msg = str(ex)
+            self._mostrar_erro(f"Erro ao processar cálculo/PDF: {err_msg}")
 
     def _mostrar_erro(self, mensagem: str) -> None:
         """Exibe erros e reabilita o botão."""
@@ -236,5 +247,5 @@ class MeuApp(App):
         return RootLayout()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     MeuApp().run()
